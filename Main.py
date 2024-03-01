@@ -9,11 +9,11 @@ SERVER_HOST = "vlbelintrocrypto.hevs.ch"
 SERVER_PORT = 6000
 
 
-
-
 # returns length in 2 bytes
 def get_message_length(length):
-    res = length.to_bytes(2, byteorder='big')
+    res = bytearray()
+    res.extend(str(length).encode().rjust(2, b'\x00')) # .to_bytes(2, byteorder='big')
+    print(f'message length of {length} is {res}')
     return res
 
 
