@@ -13,12 +13,20 @@ SERVER_PORT = 6000
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((SERVER_HOST, SERVER_PORT))
     s.setblocking(False)
-    m = "test"
+    m = "Se7en ahaha"
     t = "t"
 
     msg = Message(t, m)
-
     s.sendall(msg.data)
-    rcv = s.recv(1024)
+
+    recieved = False
     
-print(f"Received {rcv.decode()}")
+    while(not recieved):
+        try:
+            rcv = s.recv(len(msg.data))
+        except:
+            pass
+        else:
+            recieved = True
+            print(f"Received {rcv.decode()}")
+    

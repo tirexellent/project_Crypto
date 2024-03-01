@@ -6,11 +6,8 @@ class Message():
 
     # returns length in 2 bytes
     def get_message_length(self, length):
-        res = bytearray()
-        res.extend(str(length).encode().rjust(2, b'\x00')) # .to_bytes(2, byteorder='big')
-        return res
-
-
+        return length.to_bytes(2, byteorder='big')
+        
     # returns message as 4 bytes per character
     def get_message_characters(self, message):
         res = bytearray()
