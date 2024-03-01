@@ -23,19 +23,14 @@ class Message():
             data = b"ISC"
             data += t.encode()
 
-            if t == 't':
-                length = len(m)
-                self.length = length
-                # 2 bytes for length
-                data += self.get_message_length(length)
-                # 4 bytes per character in message
-                data += self.get_message_characters(m)
-            elif t == 'i':
-                print("image")
-            elif t == 's':
-                print("server")
+            length = len(m)
+            self.length = length
+            # 2 bytes for length
+            data += self.get_message_length(length)
+            # 4 bytes per character in message
+            data += self.get_message_characters(m)
 
-            print(f"Sent data: {data}")
+            # print(f"Sent data: {data}")
 
         self.data = data
         return data
