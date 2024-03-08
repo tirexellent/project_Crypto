@@ -12,13 +12,13 @@ class Shift:
         self.encoded_message = res
         return res
     
-    
-    # TODO
     def decode_message(self):        
         res = bytearray()
         if isinstance(self.message.body, str):
+            print(self.encoded_message.decode())
             for c in self.encoded_message.decode():
-                print(c)
-                byte = (int.from_bytes(c.encode()) - self.key).to_bytes(4, byteorder="big", signed=True)
-                res.extend(byte.rjust(4, b'\x00'))
+                code = int.from_bytes(c.encode()) - self.key # utf-8 char value
+                if code >= 0:
+                    byte = code.to_bytes(4, byteorder="big")
+                    res.extend(byte.rjust(4, b'\x00'))
         return res
