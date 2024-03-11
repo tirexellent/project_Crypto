@@ -1,9 +1,11 @@
-class Shift:
-    def __init__(self, m, k):
+from cipher import Cipher
+
+class Shift(Cipher):
+    def __init__(self, m: str, k: int):
         self.message = m
         self.key = k
 
-    def encode_message(self):        
+    def encode_message(self) -> bytearray:        
         res = bytearray()
         if isinstance(self.message.body, str):
             for c in self.message.body:
@@ -12,7 +14,7 @@ class Shift:
         self.encoded_message = res
         return res
     
-    def decode_message(self):        
+    def decode_message(self) -> bytearray:        
         res = bytearray()
         if isinstance(self.message.body, str):
             print(self.encoded_message.decode())

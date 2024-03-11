@@ -1,15 +1,15 @@
-class Message():
-    def __init__(self, t, b) -> None:
+class Message:
+    def __init__(self, t: str, b: str) -> None:
         self.type = t
         self.body = b
         self.data = self.create_message(t,b)
 
     # returns length in 2 bytes
-    def get_message_length(self, length):
+    def get_message_length(self, length: int) -> bytes:
         return length.to_bytes(2, byteorder='big')
         
     # returns message as 4 bytes per character
-    def get_message_characters(self, message):
+    def get_message_characters(self, message: str) -> bytearray:
         res = bytearray()
         if isinstance(message, str):
             for c in message:
@@ -17,8 +17,8 @@ class Message():
         return res
 
 
-    def create_message(self, t, m):
-        data = []
+    def create_message(self, t: str, m: str) -> str:
+        data = ""
         if isinstance(m, str):        
             data = b"ISC"
             data += t.encode()
