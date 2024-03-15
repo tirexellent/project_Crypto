@@ -1,5 +1,5 @@
-class Cipher:
-    def __init__(self, m: str, k: str | int):
+class Algorithm:
+    def __init__(self, m: str = "", k: int | str = ""):
         self.message = m
         self.key = k
 
@@ -9,4 +9,8 @@ class Cipher:
 
     def decode_message(self) -> bytearray:
         """Decode message"""
+        pass
+
+    def run_state(self, state, s, msg_size) -> None:
+        """test with server"""
         pass

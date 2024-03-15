@@ -1,5 +1,5 @@
 from message import Message
-from cipher import Cipher
+from algorithm import Algorithm
 from shift import Shift
 from vigenere import Vigenere
 import socket
@@ -37,7 +37,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     num_bytes = 4
     state = 1
 
-    # _cipher = Shift(msg, 4)
+    _algorithm: Algorithm = Vigenere()
     # print(_cipher.encode_message().decode())
     # print(_cipher.decode_message().decode())
 
@@ -46,68 +46,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     # print(_cipher.decode_message().decode())
     
     
-    #TODO: Make dynamic with different cipher algosrithms
-    # Loop for shift
-    # while(True):
-    #     try:
-    #         if state == 1:
-    #             rcv = s.recv(4)
-    #             print(f"rcv 1 {rcv}")
-    #             state += 1
-    #         if state == 2:
-    #             rcv = s.recv(2)
-    #             print(f"rcv 2 {rcv}")
-    #             msg_size = int.from_bytes(rcv)
-    #             state += 1
-    #         if state == 3:
-    #             rcv = s.recv(msg_size*4)
-    #             print(f"rcv 3 {rcv.decode()}")
-    #             state += 1
-    #         if state == 4:
-    #             rcv = s.recv(6 + size*4)
-    #             print(f"rcv 4 {rcv.decode()}")
-
-    #     except:
-    #         pass
-    #     else:
-    #         pass
-    #         # print(f"Received {rcv.decode()}")
-
-    # Loop for vigenere
+    #TODO: Make dynamic with different cipher algorithms
     while(True):
         try:
-            # read ISC + type
-            if state == 1:
-                rcv = s.recv(4)
-                print(f"rcv 1 {rcv}")
-                state += 1
-            # read msg length
-            if state == 2:
-                rcv = s.recv(2)
-                print(f"rcv 2 {rcv}")
-                msg_size = int.from_bytes(rcv)
-                state += 1
-            # read msg and key
-            if state == 3:
-                rcv = s.recv(msg_size*4)
-                res = rcv.decode()
-                print(f"rcv 3 {res}")
-                key = res.split()[-1]
-                state += 1
-            # read msg base to encrypt
-            if state == 4:
-                rcv = s.recv(6)
-                print(f"rcv 4 {rcv.decode()}")
-                state += 1
-            # read msg to encode
-            if state == 5:
-                rcv = s.recv(size*4)
-                print(f"rcv 5 {rcv.decode()}")
-                _vigenere = Vigenere(Message("s", rcv.decode()), key)
-                print("Encoded: ", _vigenere.encode_message().decode())
-                break
-        except:
+            _algorithm.run_state(state, s, size)
+            state += 1
+        except Exception as err:
             pass
+            # print(f"Unexpected {err=}, {type(err)=}")
+            # break
         else:
             pass
             # print(f"Received {rcv.decode()}")
