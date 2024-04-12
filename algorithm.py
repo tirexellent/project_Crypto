@@ -11,6 +11,5 @@ class Algorithm:
         """Decode message"""
         pass
 
-    def run_state(self, state, s, msg_size) -> None:
-        """test with server"""
+    def getKey(self, rcv) -> int | str:
         pass
