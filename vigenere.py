@@ -1,51 +1,55 @@
-from algorithm import Algorithm
 from message import Message
 
-class Vigenere(Algorithm):
+class Vigenere():
     def __init__(self, m: str = "", k: str = ""):
         self.message = m
         self.key = k
 
-    # TODO: Encode vigenere
-    def encode_message(self) -> bytearray:
+    def start_encoding(self, s, t):
+        self.getKey(s.receive_str(t))
+        msg = s.receive_str(t)        
+        encoded = self.encode_message(msg)
+        s.send_bytes(t, encoded)
+
+        s.receive_str(t)
+
+    def start_decoding(self, s, t):
+        pass
+
+    def encode_message(self, msg) -> bytearray:
         res = bytearray()
         alph: str = "abcdefghijklmnopqrstuvwxyz"
-        m = self.message
         
-        if isinstance(m, str):
+        if isinstance(msg, str):
             key: str = self.key.lower()
-            while len(key) < len(m):
+            while len(key) < len(msg):
                 key += self.key.lower()
             
-            print(m, key)
             key_index = 1
-            for i in range(1, len(m)+1):
-                c = m[i-1].lower()
+            for c in Message.message_to_4_bytes_array(msg):
+                print(c)
 
-                shift = 0
-                current_key = key[key_index*4-1]
-                if current_key in alph:
-                    # print(f"{current_key} is letter")
-                    shift = alph.index(current_key.lower())
-                else:
-                    # print(f"{key[current_key]} is not letter")
-                    shift = int.from_bytes(current_key.encode())
+                # c = msg[i-1].lower()
+
+                # shift = 0
+                # current_key = key[key_index*4-1]
+                # if current_key in alph:
+                #     shift = alph.index(current_key.lower())
+                # else:
+                #     shift = int.from_bytes(current_key.encode())
                     
-                # print(f"{c} will be shifted by {shift}")
-                byte: bytes = (int.from_bytes(c.encode()) + shift).to_bytes()
-                res.extend(byte)
+                # byte: bytes = (int.from_bytes(c.encode()) + shift).to_bytes()
+                # print(f"{c} shifted by {shift} is {byte.decode()}")
+                # res.extend(byte)
 
-                if i % 4 == 0:
-                    key_index += 1
+                # if i % 4 == 0:
+                #     key_index += 1
 
-
-        self.encoded_message = res
-        print('res:', res)
         return res
 
     def decode_message(self) -> bytearray:
         pass
     
-    def getKey(self, rcv) -> int | str:
-        if self.key == "" and self.task == "encode":
-            self.key = str(rcv.split()[-1])           
+    def getKey(self, rcv) -> None:
+        if self.key == "":
+            self.key = str(rcv.split()[-1])
