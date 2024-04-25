@@ -1,7 +1,8 @@
 class Message:
-    def __init__(self, t: str, b: str) -> None:
+    def __init__(self, t: str, b: str | bytearray, length: int = 0) -> None:
         self.type = t
         self.body = b
+        self.length = length
         self.data = self.create_message(t,b)
 
     # returns length in 2 bytes
@@ -17,20 +18,54 @@ class Message:
         return res
 
 
-    def create_message(self, t: str, m: str) -> str:
-        data = ""
-        if isinstance(m, str):        
-            data = b"ISC"
-            data += t.encode()
+    def create_message(self, t: str, m: str | bytearray) -> str:  
+        self.data = b"ISC"
+        self.data += t.encode()
 
-            length = len(m)
-            self.length = length
+        # if message is already encoded
+        if type(m) == bytearray or type(m) == bytes:
             # 2 bytes for length
-            data += self.get_message_length(length)
+            self.data += self.get_message_length(self.length)
+            self.data += m
+
+        elif type(m) == str:
+            self.length = len(m)
+            # 2 bytes for length
+            self.data += self.get_message_length(self.length)
             # 4 bytes per character in message
-            data += self.get_message_characters(m)
+            self.data += self.get_message_characters(m)
 
-            # print(f"Sent data: {data}")
+        return self.data
+        
+    
+    @staticmethod
+    def bytes_to_string(x: str):
+        # every 4 bytes is one char
+        res = ""
+        chars: list[bytearray] = []
+        c = bytearray()
+        i = 0
 
-        self.data = data
-        return data
+        for b in x:
+            try:
+                b = int(b)
+                c.extend(b.to_bytes().rjust(1, b'\x00'))
+            except ValueError:
+                c.extend(b.encode().rjust(1, b'\x00'))
+
+            i += 1
+            if i == 4:
+                i = 0
+                chars.append(c)
+                c = bytearray()
+
+        for s in chars:
+            y = int.from_bytes(s)
+            res += str(y)
+            
+        return res
+    
+    
+    @staticmethod
+    def message_to_4_bytes_array(message):
+        return [message[i:i+4] for i in range(0, len(message), 4)]
