@@ -20,20 +20,22 @@ class RSA():
         keys = s.receive_str(t)
         self.getKey(keys)
         msg_to_encode = s.receive_bytes(t)
+        print("Message: ", msg_to_encode.decode())
         encoded_msg = self.encode_message(msg_to_encode)
         s.send_bytes(t,  encoded_msg)
 
-        s.receive_str(t)
+        return s.receive_str(t)
 
     def start_decoding(self, s, t):        
         s.receive_str(t)
         keys = f"{self.publicKey[0]},{self.publicKey[1]}"
         s.send_str(t, keys)
         msg_to_decode = s.receive_bytes(t)
+        print("Message, ", msg_to_decode)
         decoded_msg = self.decode_message(msg_to_decode)
         s.send_bytes(t, decoded_msg)
 
-        s.receive_str(t)
+        return s.receive_str(t)
 
     def encode_message(self, msg):
         encoded_message = bytes()

@@ -1,5 +1,4 @@
 from server_socket import Socket
-from message import Message
 from shift import Shift
 from vigenere import Vigenere
 from rsa import RSA
@@ -20,40 +19,45 @@ def chat(s: Socket):
         task = input()
         m += f"{alg} {task} {size}"
 
-    s.send_str(TYPE, m)
-    
-    try: 
-        match alg:
-            case "shift":
-                shift = Shift()
-                if task == "encode":
-                    shift.start_encoding(s, TYPE)
-                elif task == "decode":
-                    shift.start_decoding(s, TYPE)
-                    
-            case "vigenere":
-                vigenere = Vigenere()
-                if task == "encode":
-                    vigenere.start_encoding(s, TYPE)
-                elif task == "decode":
-                    vigenere.start_decoding(s, TYPE)
+    correct = False
+    res = ""
+    while(not correct):
+        s.send_str(TYPE, m)
 
-            case "RSA":
-                rsa = RSA()
-                if task == "encode":
-                    rsa.start_encoding(s, TYPE)
-                elif task == "decode":
-                    rsa.start_decoding(s, TYPE)
+        try: 
+            match alg:
+                case "shift":
+                    shift = Shift()
+                    if task == "encode":
+                        res = shift.start_encoding(s, TYPE)
+                    elif task == "decode":
+                        res = shift.start_decoding(s, TYPE)
+                        
+                case "vigenere":
+                    vigenere = Vigenere()
+                    if task == "encode":
+                        res = vigenere.start_encoding(s, TYPE)
+                    elif task == "decode":
+                        res = vigenere.start_decoding(s, TYPE)
 
-            case "DifHel":
-                dh = DiffieHellman()
-                dh.start(s, TYPE)
+                case "RSA":
+                    rsa = RSA()
+                    if task == "encode":
+                        res = rsa.start_encoding(s, TYPE)
+                    elif task == "decode":
+                        res = rsa.start_decoding(s, TYPE)
 
-        s.reconnect()
-    except Exception as err:
-        raise err
-    else:
-        pass
+                case "DifHel":
+                    dh = DiffieHellman()
+                    res = dh.start(s, TYPE)
+        
+            correct = " correct" in res or " valid" in res
+            s.reconnect()
+        except Exception as err:
+            raise err
+        else:
+            pass
+        
 def rsa_encode():
     pass
 

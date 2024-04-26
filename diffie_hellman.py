@@ -28,7 +28,7 @@ class DiffieHellman():
         s.send_str(t, f"{half_key_a}")
         s.receive_str(t)
         s.send_str(t, f"{secret}")
-        s.receive_str(t)
+        return s.receive_str(t)
 
     def encode_message(self, msg):
         pass

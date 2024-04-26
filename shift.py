@@ -9,7 +9,7 @@ class Shift():
         encoded = self.encode_message(msg)
         s.send_bytes(t, encoded)
 
-        s.receive_str(t)
+        return s.receive_str(t)
 
     def start_decoding(self, s, t):
         s.receive_str(t)
@@ -19,7 +19,7 @@ class Shift():
             s.send_str(t, str(self.key))
             res: str = s.receive_str(t)
             if "correct" in res:
-                return
+                return res
             
             self.key += 1
 

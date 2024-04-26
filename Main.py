@@ -11,7 +11,7 @@ s.connect(SERVER_HOST, SERVER_PORT)
 while True:
     print("_______________________________")
     print("Server or public ? [s/p]")
-    t = input()
+    t = "s" # input()
     
     match t:
         case "s":

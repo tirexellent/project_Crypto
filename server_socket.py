@@ -79,16 +79,13 @@ class Socket():
                 while len(rcv) == 0 and rcv[0:3].decode("utf-8") != "ISC" and rcv[3:4] != t:
                     rcv = self.s.recv(6)
                 
-                print(f"rcv {rcv}")
+                # print(f"rcv {rcv}")
 
                 length = int.from_bytes(rcv[4:6])
 
                 content = self.s.recv(length*4)
                 while len(content) < length * 4:
                     content += self.s.recv(length*4 - len(content))
-
-                rcv += content
-                # print(f"rcv {rcv.decode()}")
                 
                 arr = []
                 for i in range(0,length*4,4):
